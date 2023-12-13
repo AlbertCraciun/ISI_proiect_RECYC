@@ -38,9 +38,8 @@ import { IRecyclePoint } from "src/app/services/database/firebase.service";
     pointGraphic: esri.Graphic;
     graphicsLayer: esri.GraphicsLayer;
   
-    // Attributes
-    zoom = 10;
-    center: Array<number> = [-118.73682450024377, 34.07817583063242];
+    center: Array<number> = [26.1025, 44.4268]; // longitudine, latitudine
+    zoom = 12; 
     basemap = "streets-vector";
     loaded = false;
     pointCoords: number[] = [-118.73682450024377, 34.07817583063242];
