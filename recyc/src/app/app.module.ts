@@ -16,13 +16,15 @@ import { MatToolbarModule} from '@angular/material/toolbar';
 import { MatSidenavModule} from '@angular/material/sidenav';
 import { MatListModule} from '@angular/material/list';
 import { MatGridListModule} from '@angular/material/grid-list';
+import { MapTestPageComponent } from './pages/map-test-page/map-test-page.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomePageComponent,
     LoginPageComponent,
-    MapPageComponent
+    MapPageComponent,
+    MapTestPageComponent
   ],
   imports: [
     BrowserModule,

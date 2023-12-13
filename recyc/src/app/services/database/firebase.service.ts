@@ -58,5 +58,5 @@ export class FirebaseService {
         this.db.list('users').push(user);
     }
 
-    // Alte metode pot fi adăugate aici, cum ar fi actualizarea sau ștergerea de puncte sau utilizatori
+    // Alte metode pot fi adăugate aici
 }
