@@ -3,6 +3,14 @@ import WebMap from '@arcgis/core/WebMap';
 import FeatureLayer from '@arcgis/core/layers/FeatureLayer';
 import GraphicsLayer from '@arcgis/core/layers/GraphicsLayer';
 import MapView from '@arcgis/core/views/MapView';
+import Search from "@arcgis/core/widgets/Search";
+import Point from '@arcgis/core/geometry/Point';
+import RouteParameters from '@arcgis/core/rest/support/RouteParameters';
+import FeatureSet from '@arcgis/core/rest/support/FeatureSet';
+import * as Route from '@arcgis/core/rest/route';
+import Graphic from '@arcgis/core/Graphic';
+
+
 
 import esri = __esri; // Esri TypeScript Types
 
@@ -81,6 +89,38 @@ export class MapTestPageComponent implements OnInit, OnDestroy {
     }
   }
 
+  async findRoute() {
+    console.log("finding route");
+    const routeParams = new RouteParameters({
+      stops: new FeatureSet({
+        features: [
+          // // Wrap Points in Graphic objects
+          // new Graphic({
+          //   geometry: new Point({ longitude: 26.1025, latitude: 44.4268 })
+          // }),
+          // new Graphic({
+          //   geometry: new Point({ longitude: 27.1025, latitude: 45.4268 })
+          // })
+          this.originPoint!, this.destinationPoint!
+        ]
+      }),
+      returnDirections: true
+    });
+  
+    try {
+      const data = await Route.solve("https://route-api.arcgis.com/arcgis/rest/services/World/Route/NAServer/Route_World", routeParams);
+      
+      if (data.routeResults.length > 0) {
+        const routeResult = data.routeResults[0].route;
+        this.graphicsLayer.add(routeResult);
+        console.log("Route added to the map.");
+      }
+    } catch (error) {
+      console.error("Error solving route: ", error);
+    }
+  }
+  
+
   addGraphicLayers() {
     this.graphicsLayer = new GraphicsLayer();
     this.map.add(this.graphicsLayer);
@@ -124,15 +164,128 @@ export class MapTestPageComponent implements OnInit, OnDestroy {
     this.router.navigate(['/home']);
   }
 
+  zoomIn() {
+    this.view.zoom += 1;
+  }
+
+  zoomOut() {
+    this.view.zoom -= 1;
+  }
+
+  searchWidget: Search | null = null;
+  isSearchWidgetVisible: boolean = false;
+
+  openSearch() {
+    if (!this.searchWidget) {
+      // Inițializează widgetul de căutare dacă nu există
+      this.searchWidget = new Search({
+        view: this.view,
+        container: "searchWidgetContainer",
+        allPlaceholder: "Caută locații sau adrese"
+      });
+
+      // Adăugarea widgetului de căutare la harta ArcGIS
+      this.view.ui.add(this.searchWidget, {
+        position: "top-right",
+        index: 2
+      });
+    }
+
+    if (this.isSearchWidgetVisible) {
+      // Ascunde widgetul de căutare
+      this.view.ui.remove(this.searchWidget);
+    } else {
+      // Afișează widgetul de căutare
+      this.view.ui.add(this.searchWidget, "top-right");
+    }
+
+    // Schimbă starea vizibilității
+    this.isSearchWidgetVisible = !this.isSearchWidgetVisible;
+  }
+
+  originPoint: esri.Graphic | null = null;
+  destinationPoint: esri.Graphic | null = null;
+  isRoutingMode = false;
+
+  route() {
+    if (this.isRoutingMode) {
+      // Dezactivează modul routing și șterge punctele și ruta
+      this.isRoutingMode = false;
+      this.originPoint = null;
+      this.destinationPoint = null;
+      this.graphicsLayer.removeAll(); // Șterge toate graficele, inclusiv ruta
+    } else {
+      // Activează modul routing
+      this.isRoutingMode = true;
+    }
+  }  
+
+  handleMapClick(event: any) {
+    if (this.isRoutingMode) {
+      // Transformă coordonatele click-ului într-un punct
+      const point = new Point({
+        longitude: event.mapPoint.longitude,
+        latitude: event.mapPoint.latitude
+      });
+      const graphic = new Graphic({
+        geometry: point,
+      });
+  
+      if (!this.originPoint) {
+        // Setează punctul de origine
+        this.originPoint = graphic;
+        this.graphicsLayer.add(graphic);
+      } else if (!this.destinationPoint) {
+        // Setează punctul de destinație și găsește ruta
+        this.destinationPoint = graphic;
+        this.graphicsLayer.add(graphic);
+        this.findRoute();
+        this.isRoutingMode = false; // Dezactivează modul routing
+      }
+    }
+  }
+  
+
+  currentLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const coords = position.coords;
+          const point = new Point({
+            longitude: coords.longitude,
+            latitude: coords.latitude
+          });
+  
+          this.view.center = point;
+          this.view.zoom = 15; // Setează nivelul de zoom dorit
+        },
+        err => {
+          if (err.code === err.PERMISSION_DENIED) {
+            console.error('Permisiunea de geolocație a fost blocată. Te rog să accesezi setările de permisiuni din browser pentru a activa geolocația.');
+            // Aici poți adăuga logica pentru afișarea unui mesaj în interfața utilizatorului
+            alert('Permisiunea de geolocație a fost blocată. Te rog să accesezi setările de permisiuni din browser pentru a activa geolocația.');
+          } else {
+            console.error('Eroare la obținerea locației: ', err);
+          }
+        }
+      );
+    } else {
+      console.error('Geolocația nu este suportată de acest browser.');
+    }
+  }
+  
+
   ngOnInit() {
-    // Initialize MapView and return an instance of MapView
-    console.log("initializing map");
     this.initializeMap().then(() => {
-      // The map has been initialized
-      console.log("mapView ready: ", this.view.ready);
       this.loaded = this.view.ready;
+  
+      // Ascultător pentru click-uri pe hartă
+      this.view.on('click', (event) => {
+        this.handleMapClick(event);
+      });
     });
   }
+  
 
   ngOnDestroy() {
     if (this.view) {

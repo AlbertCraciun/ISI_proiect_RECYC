@@ -1,27 +1,41 @@
-<!-- Here's the DIV that we inject the map into -->
+<!-- Bara de navigare cu butoanele de control -->
+<div class="navigation-bar">
+    <!-- Butonul de navigare înapoi -->
+    <button mat-icon-button (click)="navigateBack()" class="navigation-button icon-button">
+        <mat-icon>arrow_back</mat-icon>
+    </button>  
 
-<!-- Bara de căutare -->
-<!-- <mat-toolbar color="primary">
-    <mat-form-field appearance="fill">
-        <mat-label>Caută</mat-label>
-        <input matInput placeholder="Introduceți termenul de căutare">
-        <button mat-button matSuffix mat-icon-button aria-label="Căutare">
-            <mat-icon>search</mat-icon>
-        </button>
-    </mat-form-field>
-</mat-toolbar> -->
+    <!-- Butonul de căutare (dacă este necesar) -->
+    <button mat-icon-button (click)="openSearch()" class="navigation-button icon-button">
+        <mat-icon>search</mat-icon>
+    </button>
 
-<button mat-icon-button (click)="navigateBack()" class="back-button">
-    <mat-icon>arrow_back</mat-icon>
-</button>  
+    <!-- Butonul de localizare -->
+    <button mat-icon-button (click)="currentLocation()" class="navigation-button icon-button">
+        <mat-icon><img src="assets/icons/locpin.png" alt="Location"></mat-icon>
+    </button>
 
-<div fxLayout="row">
-    <div fxFlex="20%" fxLayout="column">
-        <mat-list>
-            <mat-divider></mat-divider>
-        </mat-list>
-    </div>
-    <div fxFlex="80%">
-        <div #mapViewNode></div>
-    </div>
+    <!-- Butonul de routring -->
+    <button mat-icon-button (click)="route()" class="navigation-button icon-button">
+        <mat-icon>route</mat-icon>
+    </button>
+
+    <!-- Butonul de zoom in (adaugă funcționalitatea corespunzătoare) -->
+    <button mat-icon-button (click)="zoomIn()" class="navigation-button icon-button">
+        <mat-icon>zoom_in</mat-icon>
+    </button>
+
+    <!-- Butonul de zoom out (adaugă funcționalitatea corespunzătoare) -->
+    <button mat-icon-button (click)="zoomOut()" class="navigation-button icon-button">
+        <mat-icon>zoom_out</mat-icon>
+    </button>
+</div>
+
+<!-- Container pentru widgetul de căutare -->
+<div id="searchWidgetContainer"></div>
+
+
+<!-- Harta -->
+<div class="map-border">
+    <div #mapViewNode class="esri-view"></div>
 </div>
