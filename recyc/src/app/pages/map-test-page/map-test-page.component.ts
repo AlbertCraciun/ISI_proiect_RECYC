@@ -7,6 +7,7 @@ import MapView from '@arcgis/core/views/MapView';
 import esri = __esri; // Esri TypeScript Types
 
 import Config from '@arcgis/core/config';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-map-test-page',
@@ -16,6 +17,8 @@ import Config from '@arcgis/core/config';
 export class MapTestPageComponent implements OnInit, OnDestroy {
   // The <div> where we will place the map
   @ViewChild("mapViewNode", { static: true }) private mapViewEl!: ElementRef;
+
+  constructor(private router: Router) {}
 
   // Instances
   map!: esri.Map;
@@ -115,6 +118,10 @@ export class MapTestPageComponent implements OnInit, OnDestroy {
     if (this.pointGraphic != null) {
       this.graphicsLayer.remove(this.pointGraphic);
     }
+  }
+
+  navigateBack() {
+    this.router.navigate(['/home']);
   }
 
   ngOnInit() {

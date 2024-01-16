@@ -17,6 +17,8 @@ import { MatSidenavModule} from '@angular/material/sidenav';
 import { MatListModule} from '@angular/material/list';
 import { MatGridListModule} from '@angular/material/grid-list';
 import { MapTestPageComponent } from './pages/map-test-page/map-test-page.component';
+import { RegisterPageComponent } from './register-page/register-page.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -24,7 +26,8 @@ import { MapTestPageComponent } from './pages/map-test-page/map-test-page.compon
     HomePageComponent,
     LoginPageComponent,
     MapPageComponent,
-    MapTestPageComponent
+    MapTestPageComponent,
+    RegisterPageComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +41,9 @@ import { MapTestPageComponent } from './pages/map-test-page/map-test-page.compon
     MatToolbarModule,
     MatSidenavModule,
     MatListModule,
-    MatGridListModule
+    MatGridListModule,
+    ReactiveFormsModule,
+    MatButtonModule
   ],
   providers: [],
   bootstrap: [AppComponent]
