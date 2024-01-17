@@ -53,7 +53,7 @@ export class MapTestPageComponent implements OnInit, OnDestroy {
         basemap: this.basemap
       };
 
-      Config.apiKey = "AAPK0d67032f344a4015a74740590b05c512QYR1zYgM2NQDfy0WxA8mqxPMeeLgFwmwDnAcKc7Ca21Kt-cGcgk6FgS7Qu6uR4oz";
+      Config.apiKey = "AAPK83da0fb54e404ae09644e66e7b1f1adcCnzLlYpldfHnxALVmCxQqYh3sKA1R2o8tjEglpeBFxb4VVRU3X9LnuyHpdwmEfJn";
 
       this.map = new WebMap(mapProperties);
 
@@ -278,6 +278,30 @@ export class MapTestPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.initializeMap().then(() => {
       this.loaded = this.view.ready;
+
+      const layer1 = new FeatureLayer({
+        portalItem: {
+          id: "3672b9020ae0418280795b5bc801d3ab"
+        }
+      });
+      
+      this.map.add(layer1);
+
+      const layer2 = new FeatureLayer({
+        portalItem: {
+          id: "855050beb3e8419ea41db0fc06b91cc4"
+        }
+      });
+      
+      this.map.add(layer2);
+
+      const layer3 = new FeatureLayer({
+        portalItem: {
+          id: "3a05537b2657435d896c2ce73b9b16aa"
+        }
+      });
+      
+      this.map.add(layer3);
   
       // Ascultător pentru click-uri pe hartă
       this.view.on('click', (event) => {
