@@ -1,0 +1,32 @@
+<div class="login-page">
+	<button mat-icon-button (click)="navigateBack()" class="back-button">
+			<mat-icon>
+				<img src="assets/icons/back.png" alt="Back">
+			</mat-icon>
+	</button>
+
+	
+		<form class="login-form">
+			<mat-form-field class="input-full-width">
+				<mat-label>Email</mat-label>
+				<input type="email" matInput [formControl]="emailFormControl" placeholder="Ex. pat@example.com">
+				<mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+					Te rog introdu o adresă de email validă
+				</mat-error>
+				<mat-error *ngIf="emailFormControl.hasError('required')">
+					Email-ul este <strong>necesar</strong>
+				</mat-error>
+			</mat-form-field>
+	
+			<mat-form-field class="input-full-width">
+				<mat-label>Parola</mat-label>
+				<input matInput [formControl]="passwordFormControl" placeholder="Ex. ********">
+				<mat-error *ngIf="passwordFormControl.hasError('required')">
+					Parola este <strong>necesara</strong>
+				</mat-error>
+			</mat-form-field>
+	
+			<button mat-raised-button class="auth-button" (click)="onLogin()">Autentificare</button>
+		</form>
+	</div>
+	
