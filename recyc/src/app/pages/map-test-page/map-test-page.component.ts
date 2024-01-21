@@ -53,7 +53,7 @@ export class MapTestPageComponent implements OnInit, OnDestroy {
         basemap: this.basemap
       };
 
-      Config.apiKey = "AAPK83da0fb54e404ae09644e66e7b1f1adcCnzLlYpldfHnxALVmCxQqYh3sKA1R2o8tjEglpeBFxb4VVRU3X9LnuyHpdwmEfJn";
+      Config.apiKey = ""; // Setează cheia API pentru ArcGIS
 
       this.map = new WebMap(mapProperties);
 
